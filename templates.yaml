@@ -1,0 +1,253 @@
+##################
+### Baby Buddy ###
+##################
+template:
+  - sensor:
+#Last Feeding Time Humanized
+      - name: "Last Feeding Time Humanized"
+        state: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_feeding', 'start')) |timestamp_custom ('%-I:%M %p') }}"
+        attributes:
+          #24 Hour Time
+          24 Hour Time: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_feeding', 'start')) |timestamp_custom ('%H:%M') }}"
+          #Humanized
+          Humanized: >-
+            {% set backup = as_timestamp(now())-as_timestamp(state_attr('sensor.baby_Doe_last_feeding', 'start')) %}
+            {% set minutes = (backup // 60)|int %}
+            {% set hours = minutes // 60 %}
+            {% set days = hours // 24 %}
+
+            {% set minutes = minutes % 60 %}
+            {% set hours =  hours % 24 %}
+            {% set days = days % 7 %}
+
+            {% macro phrase(value,name) %}
+              {%- set value = value %}
+              {%- set end = 's' if value > 1 else '' %}
+              {{- '{} {}{}'.format(value,name,end) if value|int > 0 else '' }}
+            {%- endmacro %}
+
+            {% set text = [phrase(days,'day'),phrase(hours,'hour'),
+                          phrase(minutes,'min')]
+                          |select('!=','')|list|join(', ') %}
+            {% set last_comma = text.rfind(',') %}
+            {% if last_comma != -1 %}
+              {% set text = text[:last_comma] + ' and' + text[last_comma + 1:] %}
+            {% endif %}
+            {{text ~ ' ago'}}
+          #Duration
+          Duration: >-
+            {%- set word_for_and = 'and' %}
+            {%- set up_time = (state_attr('sensor.baby_Doe_last_feeding', 'duration') | as_timedelta).seconds %}
+
+            {%- macro phrase(name, plural_name, divisor, mod=None) %}
+              {%- set value = ((up_time // divisor) % (mod if mod else divisor)) | int %}
+              {%- set name = plural_name if value > 1 else name %}
+              {{- '{} {}'.format(value, name) if value | int > 0 else '' }}
+            {%- endmacro %}
+
+            {%- set values = [ 
+                      phrase('hour', 'hours', 60*60),
+                      phrase('minute', 'minutes', 60), 
+                  ] | select('!=','') | list %}
+                          
+            {{ values[:-1] | join(', ') ~ ' ' ~ word_for_and ~ ' ' ~ values[-1] if values | length > 1 else values | first | default }}
+          Amount: "{{ state_attr('sensor.baby_Doe_last_feeding', 'amount')|round|int}}"
+
+#Last Pumping Time Humanized
+      - name: "Last Pumping Time Humanized"
+        state: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_pumping', 'time')) |timestamp_custom ('%-I:%M %p') }}"
+        attributes:
+          24 Hour Time: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_pumping', 'time')) |timestamp_custom ('%H:%M') }}"
+          Humanized: >-
+            {% set backup = as_timestamp(now())-as_timestamp(state_attr('sensor.baby_Doe_last_pumping', 'time')) %}
+            {% set minutes = (backup // 60)|int %}
+            {% set hours = minutes // 60 %}
+            {% set days = hours // 24 %}
+
+            {% set minutes = minutes % 60 %}
+            {% set hours =  hours % 24 %}
+            {% set days = days % 7 %}
+
+            {% macro phrase(value,name) %}
+              {%- set value = value %}
+              {%- set end = 's' if value > 1 else '' %}
+              {{- '{} {}{}'.format(value,name,end) if value|int > 0 else '' }}
+            {%- endmacro %}
+
+            {% set text = [phrase(days,'day'),phrase(hours,'hour'),
+                          phrase(minutes,'min')]
+                          |select('!=','')|list|join(', ') %}
+            {% set last_comma = text.rfind(',') %}
+            {% if last_comma != -1 %}
+              {% set text = text[:last_comma] + ' and' + text[last_comma + 1:] %}
+            {% endif %}
+            {{text ~ ' ago'}}
+
+#Last Diaper Change Humanized
+      - name: "Last Diaper Change Humanized"
+        state: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_change', 'time')) |timestamp_custom ('%-I:%M %p') }}"
+        attributes:
+          24 Hour Time: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_change', 'time')) |timestamp_custom ('%H:%M') }}"
+          Humanized: >-
+            {% set backup = as_timestamp(now())-as_timestamp(state_attr('sensor.baby_Doe_last_change', 'time')) %}
+            {% set minutes = (backup // 60)|int %}
+            {% set hours = minutes // 60 %}
+            {% set days = hours // 24 %}
+
+            {% set minutes = minutes % 60 %}
+            {% set hours =  hours % 24 %}
+            {% set days = days % 7 %}
+
+            {% macro phrase(value,name) %}
+              {%- set value = value %}
+              {%- set end = 's' if value > 1 else '' %}
+              {{- '{} {}{}'.format(value,name,end) if value|int > 0 else '' }}
+            {%- endmacro %}
+
+            {% set text = [phrase(days,'day'),phrase(hours,'hour'),
+                          phrase(minutes,'min')]
+                          |select('!=','')|list|join(', ') %}
+            {% set last_comma = text.rfind(',') %}
+            {% if last_comma != -1 %}
+              {% set text = text[:last_comma] + ' and' + text[last_comma + 1:] %}
+            {% endif %}
+            {{text ~ ' ago'}}
+
+#Last Sleep Time Humanized
+      - name: "Last Sleep Time Humanized"
+        state: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_sleep', 'end')) |timestamp_custom ('%-I:%M %p') }}"
+        attributes:
+          24 Hour Time: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_sleep', 'end')) |timestamp_custom ('%H:%M') }}"
+          Woke Up: >-
+            {% set backup = as_timestamp(now())-as_timestamp(state_attr('sensor.baby_Doe_last_sleep', 'end')) %}
+            {% set minutes = (backup // 60)|int %}
+            {% set hours = minutes // 60 %}
+            {% set days = hours // 24 %}
+
+            {% set minutes = minutes % 60 %}
+            {% set hours =  hours % 24 %}
+            {% set days = days % 7 %}
+
+            {% macro phrase(value,name) %}
+              {%- set value = value %}
+              {%- set end = 's' if value > 1 else '' %}
+              {{- '{} {}{}'.format(value,name,end) if value|int > 0 else '' }}
+            {%- endmacro %}
+
+            {% set text = [phrase(days,'day'),phrase(hours,'hour'),
+                          phrase(minutes,'min')]
+                          |select('!=','')|list|join(', ') %}
+            {% set last_comma = text.rfind(',') %}
+            {% if last_comma != -1 %}
+              {% set text = text[:last_comma] + ' and' + text[last_comma + 1:] %}
+            {% endif %}
+            {{text ~ ' ago'}}
+          #Duration
+          Duration: >-
+            {%- set word_for_and = 'and' %}
+            {%- set up_time = (state_attr('sensor.baby_Doe_last_sleep', 'duration') | as_timedelta).seconds %}
+
+            {%- macro phrase(name, plural_name, divisor, mod=None) %}
+              {%- set value = ((up_time // divisor) % (mod if mod else divisor)) | int %}
+              {%- set name = plural_name if value > 1 else name %}
+              {{- '{} {}'.format(value, name) if value | int > 0 else '' }}
+            {%- endmacro %}
+
+            {%- set values = [ 
+                      phrase('hour', 'hours', 60*60),
+                      phrase('minute', 'minutes', 60), 
+                  ] | select('!=','') | list %}
+                          
+            {{ values[:-1] | join(', ') ~ ' ' ~ word_for_and ~ ' ' ~ values[-1] if values | length > 1 else values | first | default }}
+
+#Last Tummy Time Humanized
+      - name: "Last Tummy Time Humanized"
+        state: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_tummy_time', 'end')) |timestamp_custom ('%-I:%M %p') }}"
+        attributes:
+          24 Hour Time: "{{ as_timestamp(state_attr('sensor.baby_Doe_last_tummy_time', 'end')) |timestamp_custom ('%H:%M') }}"
+          Humanized End: >-
+            {% set backup = as_timestamp(now())-as_timestamp(state_attr('sensor.baby_Doe_last_tummy_time', 'end')) %}
+            {% set minutes = (backup // 60)|int %}
+            {% set hours = minutes // 60 %}
+            {% set days = hours // 24 %}
+
+            {% set minutes = minutes % 60 %}
+            {% set hours =  hours % 24 %}
+            {% set days = days % 7 %}
+
+            {% macro phrase(value,name) %}
+              {%- set value = value %}
+              {%- set end = 's' if value > 1 else '' %}
+              {{- '{} {}{}'.format(value,name,end) if value|int > 0 else '' }}
+            {%- endmacro %}
+
+            {% set text = [phrase(days,'day'),phrase(hours,'hour'),
+                          phrase(minutes,'min')]
+                          |select('!=','')|list|join(', ') %}
+            {% set last_comma = text.rfind(',') %}
+            {% if last_comma != -1 %}
+              {% set text = text[:last_comma] + ' and' + text[last_comma + 1:] %}
+            {% endif %}
+            {{text ~ ' ago'}}
+          #Duration
+          Duration: >-
+            {%- set word_for_and = 'and' %}
+            {%- set up_time = (state_attr('sensor.baby_Doe_last_tummy_time', 'duration') | as_timedelta).seconds %}
+
+            {%- macro phrase(name, plural_name, divisor, mod=None) %}
+              {%- set value = ((up_time // divisor) % (mod if mod else divisor)) | int %}
+              {%- set name = plural_name if value > 1 else name %}
+              {{- '{} {}'.format(value, name) if value | int > 0 else '' }}
+            {%- endmacro %}
+
+            {%- set values = [ 
+                      phrase('hour', 'hours', 60*60),
+                      phrase('minute', 'minutes', 60), 
+                  ] | select('!=','') | list %}
+                          
+            {{ values[:-1] | join(', ') ~ ' ' ~ word_for_and ~ ' ' ~ values[-1] if values | length > 1 else values | first | default }}
+
+# Triggers to force API updates
+      - name: "LF End"
+        state: "{{ state_attr('weather.baby_Doe_last_feeding', 'end') }}"
+      - name: "LF Amount"
+        state: "{{ state_attr('weather.baby_Doe_last_feeding', 'amount') }}"
+      - name: "LP Time"
+        state: "{{ state_attr('weather.baby_Doe_last_pumping', 'time') }}"
+      - name: "LC Time"
+        state: "{{ state_attr('weather.baby_Doe_last_change', 'time') }}"
+      - name: "LC Wet"
+        state: "{{ state_attr('weather.baby_Doe_last_change', 'wet') }}"
+      - name: "LC Solid"
+        state: "{{ state_attr('weather.baby_Doe_last_change', 'solid') }}"
+      - name: "LC Color"
+        state: "{{ state_attr('weather.baby_Doe_last_change', 'color') }}"
+      - name: "LS Start"
+        state: "{{ state_attr('weather.baby_Doe_last_sleep', 'start') }}"
+      - name: "LS End"
+        state: "{{ state_attr('weather.baby_Doe_last_sleep', 'end') }}"
+      - name: "LS Duration"
+        state: "{{ state_attr('weather.baby_Doe_last_sleep', 'duration') }}"
+      - name: "LT Start"
+        state: "{{ state_attr('weather.baby_Doe_last_tummy_time', 'start') }}"
+      - name: "LT End"
+        state: "{{ state_attr('weather.baby_Doe_last_tummy_time', 'end') }}"
+      - name: "LT Duration"
+        state: "{{ state_attr('weather.baby_Doe_last_tummy_time', 'duration') }}"
+
+# Last Feeding
+      - name: "bb last feeding ounces"
+        state: "{{ (states('sensor.baby_Doe_last_feeding') | int ) * 0.034 }}"
+        unit_of_measurement: "oz"
+        attributes:
+          Milliliters: "{{states('sensor.baby_Doe_last_feeding') }}"
+# Last Pumping
+      - name: "bb last pumping ounces"
+        state: "{{ (states('sensor.baby_Doe_last_pumping') | int ) * 0.034 }}"
+        unit_of_measurement: "oz"
+        attributes:
+          Millileters: "{{states('sensor.baby_Doe_last_pumping') }}"
+# Quick fix to add mL unit of measurement
+      - name: "bb last pumping fix"
+        state: "{{ (states('sensor.baby_Doe_last_pumping') | int ) }}"
+        unit_of_measurement: "mL"

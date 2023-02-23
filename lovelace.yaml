@@ -1,0 +1,758 @@
+views:
+  - theme: kibibit-dark-cards
+    title: Baby Buddy
+    path: baby-buddy
+    icon: mdi:baby
+    type: custom:vertical-layout
+    badges: []
+    cards:
+      - type: horizontal-stack
+        cards:
+          - color: teal
+            type: tile
+            entity: input_boolean.home
+            name: Home Page
+            icon: mdi:home
+            tap_action:
+              action: navigate
+              navigation_path: /mobile-h
+            icon_tap_action:
+              action: navigate
+              navigation_path: /mobile-h
+            show_entity_picture: false
+          - color: pink
+            type: tile
+            entity: input_boolean.home
+            name: Open Baby Buddy
+            icon: mdi:baby-face
+            tap_action:
+              action: url
+              url_path: http://<YOUR-URL>:<PORT>/children/baby-doe/dashboard/
+            icon_tap_action:
+              action: url
+              url_path: >-
+                http://<YOUR-URL>:<PORT>/children/baby-doe/dashboard/
+            show_entity_picture: false
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            entity: switch.baby_doe_timer
+            name: Start/Stop Timer
+            icon: mdi:timer-sand
+            show_state: true
+            show_name: true
+            tap_action:
+              action: toggle
+            state:
+              - value: 'on'
+                color: rgb(55,255,50)
+                spin: true
+                styles:
+                  card:
+                    - height: 130px
+              - value: 'off'
+                spin: false
+                styles:
+                  card:
+                    - height: 130px
+                  icon:
+                    - padding-top: 5px
+                    - padding-bottom: 5px
+                    - margin-top: 5px
+                    - margin-bottom: 5px
+                  name:
+                    - font-size: 15px
+                    - color: white
+                    - align-self: middle
+                    - margin-top: 5px
+                  state:
+                    - padding-top: 8px
+      - type: conditional
+        conditions:
+          - entity: sensor.stopwatch
+            state_not: '00:00:00'
+        card:
+          type: vertical-stack
+          cards:
+            - type: entity
+              entity: sensor.stopwatch
+              name: Timer
+              state_color: false
+      - type: conditional
+        conditions:
+          - entity: switch.baby_doe_timer
+            state: 'on'
+        card:
+          type: horizontal-stack
+          cards:
+            - type: button
+              icon: mdi:baby
+              entity: input_button.bb_tummy_time
+              name: End Tummy Time
+              show_state: false
+              show_name: true
+              show_icon: true
+              tap_action:
+                action: navigate
+                navigation_path: /mobile-h/baby-buddy-tummy-time
+              hold_action:
+                action: navigate
+                navigation_path: /mobile-h/baby-buddy-tummy-time
+            - show_name: true
+              show_icon: true
+              type: button
+              icon: mdi:sleep-off
+              name: End Sleep Time
+              icon_height: 30px
+              entity: input_button.bb_sleep
+              tap_action:
+                action: navigate
+                navigation_path: /mobile-h/baby-buddy-sleep
+              hold_action:
+                action: navigate
+                navigation_path: /mobile-h/baby-buddy-sleep
+            - show_name: true
+              show_icon: true
+              type: button
+              tap_action:
+                action: navigate
+                navigation_path: /mobile-h/baby-buddy-feeding
+              entity: input_button.bb_feeding
+              name: End Feeding
+              show_state: false
+              hold_action:
+                action: navigate
+                navigation_path: /mobile-h/baby-buddy-feeding
+              icon: mdi:baby-bottle-outline
+      - type: horizontal-stack
+        cards:
+          - type: tile
+            tap_action:
+              action: navigate
+              navigation_path: /mobile-h/baby-buddy-diaper
+            icon_tap_action:
+              action: navigate
+              navigation_path: /mobile-h/baby-buddy-diaper
+            name: Diaper
+            icon: mdi:human-baby-changing-table
+            show_entity_picture: false
+            entity: sensor.baby_doe_last_change
+          - type: tile
+            entity: sensor.baby_doe_last_pumping
+            name: Pumping
+            tap_action:
+              action: navigate
+              navigation_path: /mobile-h/baby-buddy-pumping
+            icon_tap_action:
+              action: navigate
+              navigation_path: /mobile-h/baby-buddy-pumping
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |-
+              ---
+              # Feedings
+              ---
+          - type: entities
+            entities:
+              - entity: input_boolean.probiotic_vitamin_d
+              - type: section
+              - entity: sensor.total_daily_feeding_amount
+                type: custom:multiple-entity-row
+                name: Bottles
+                show_state: false
+                icon: mdi:baby-bottle
+                entities:
+                  - name: Day
+                    entity: sensor.bottle_counts_day
+                  - name: Night
+                    entity: sensor.bottle_counts_night
+                  - name: Since Midnight
+                    attribute: daily_bottles
+              - entity: sensor.24_hour_feeding_average
+                name: 24 Hour Average (Rolling)
+                icon: mdi:hours-24
+              - entity: sensor.total_daily_feeding_amount
+                name: Total Amount Eaten Today
+              - type: section
+              - type: attribute
+                entity: sensor.last_feeding_time_humanized
+                attribute: Humanized
+                name: Last Feeding
+                icon: mdi:clock
+              - entity: sensor.baby_doe_last_feeding
+                name: Last Amount (mL)
+                icon: mdi:beaker-outline
+              - entity: sensor.bb_last_feeding_ounces
+                name: Last Amount (oz)
+                icon: mdi:beaker-outline
+              - type: attribute
+                entity: sensor.baby_doe_last_feeding
+                attribute: method
+                name: Last Method
+                icon: mdi:list-status
+              - type: attribute
+                entity: sensor.last_feeding_time_humanized
+                attribute: Duration
+                name: Last Duration
+                icon: mdi:watch
+          - type: custom:apexcharts-card
+            graph_span: 5d
+            span:
+              end: minute
+            header:
+              show: true
+              title: Feeding Totals
+            series:
+              - entity: sensor.total_daily_feeding_amount
+                yaxis_id: amounts
+                extend_to: now
+                curve: smooth
+                name: Daily Feeding Amount
+                type: line
+                group_by:
+                  duration: 1day
+                  func: max
+              - entity: sensor.total_daily_feeding_amount
+                attribute: daily_bottles
+                yaxis_id: bottles
+                extend_to: now
+                type: column
+                name: Daily Bottles
+                unit: bottles
+                group_by:
+                  func: max
+                  duration: 1day
+            yaxis:
+              - id: amounts
+                decimals: 0
+                min: 500
+                max: 1100
+                apex_config:
+                  tickAmount: 3
+              - id: bottles
+                opposite: true
+                decimals: 0
+                max: 12
+                min: 6
+                apex_config:
+                  tickAmount: 4
+          - type: custom:plotly-graph
+            title: Feeding History
+            entities:
+              - entity: sensor.total_daily_feeding_amount
+                show_value: true
+            hours_to_show: 72
+            refresh_interval: 10
+            layout:
+              xaxis:
+                rangeselector:
+                  bgcolor: black
+                  font:
+                    size: 18
+                  'y': 1.2
+                  buttons:
+                    - count: 3
+                      step: day
+                    - count: 7
+                      step: day
+                    - count: 14
+                      step: day
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |-
+              ---
+              # Diaper Changes
+              ---
+          - type: entities
+            entities:
+              - entity: sensor.total_daily_changes
+                type: custom:multiple-entity-row
+                name: Diaper Changes
+                state_header: Total Changes
+                show_state: true
+                entities:
+                  - name: Wet
+                    entity: sensor.daily_wet_diapers
+                  - name: Solid
+                    entity: sensor.daily_solid_diapers
+              - type: attribute
+                entity: sensor.last_diaper_change_humanized
+                attribute: Humanized
+                name: Last Diaper Change
+          - type: custom:apexcharts-card
+            chart_type: donut
+            apex_config:
+              fill:
+                type: gradient
+                gradient:
+                  shade: dark
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.9
+                  opacityTo: 0.85
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+              chart:
+                fontFamily: SF Text
+              legend:
+                position: right
+                fontSize: 16px
+                fontWeight: 300
+                markers:
+                  width: 16
+                  height: 25
+                  customHTML:
+                    - |-
+                      EVAL:() => {
+                        return `<ha-icon icon="hass:emoticon-poop" style="--mdc-icon-size: 16px;"></ha-icon>`
+                      }
+                    - |-
+                      EVAL:() => {
+                        return `<ha-icon icon="hass:emoticon-poop" style="--mdc-icon-size: 16px;"></ha-icon>`
+                      }
+                  fillColors:
+                    - none
+                    - none
+              stroke:
+                show: true
+                width: 0.4
+              dataLabels:
+                enabled: true
+                style:
+                  fontSize: 14px
+                  fontWeight: 700
+                dropShadow:
+                  enabled: true
+                  top: 0
+                  left: 0
+                  blur: 3
+                  color: black
+                  opacity: 0.1
+              plotOptions:
+                pie:
+                  startAngle: 0
+                  endAngle: 360
+                  expandOnClick: true
+                  offsetX: 0
+                  offsetY: 0
+                  customScale: 1
+                  dataLabels:
+                    offset: 0
+                    minAngleToShowLabel: 10
+                  donut:
+                    size: 63%
+                    background: transparent
+                    labels:
+                      show: true
+                      value:
+                        fontSize: 42px
+                        fontWeight: 700
+                        offsetY: 16
+                      name:
+                        show: true
+            series:
+              - entity: sensor.daily_solid_diapers
+                name: Solid Diapers
+              - entity: sensor.daily_wet_diapers
+                name: Wet Diapers
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |-
+              ---
+              # Pumping
+              ---
+          - type: entities
+            entities:
+              - type: attribute
+                entity: sensor.last_pumping_time_humanized
+                attribute: Humanized
+                name: Last Pumping
+                icon: mdi:clock
+              - entity: sensor.baby_doe_last_pumping
+                name: Last Volume Pumped (mL)
+                icon: mdi:beaker-outline
+              - type: attribute
+                entity: sensor.total_daily_pumping_amount
+                attribute: times_pumped
+                name: Times Pumped Today
+                icon: mdi:counter
+              - entity: sensor.bb_last_pumping_ounces
+                name: Last Volume Pumped (oz)
+                icon: mdi:beaker-outline
+              - entity: sensor.total_daily_pumping_amount
+                name: Total Amount Pumped Today
+                icon: mdi:beaker
+              - type: attribute
+                entity: sensor.total_daily_pumping_amount
+                attribute: average_per_pump
+                name: Average mL Per Pump
+                icon: mdi:beaker
+          - type: history-graph
+            entities:
+              - entity: sensor.total_daily_pumping_amount
+            hours_to_show: 24
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |-
+              ---
+              # General Measurements
+              ---
+          - type: entities
+            entities:
+              - entity: sensor.baby_doe_last_weight
+                name: Last Weight
+              - entity: sensor.baby_doe_last_height
+                name: Last Height
+              - entity: sensor.baby_doe_last_temperature
+                name: Last Temperature
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |-
+              ---
+              # Over The Last 24 Hours
+              ---
+          - type: entities
+            entities:
+              - entity: sensor.24_hour_diaper_average
+                name: Diaper Total
+                icon: mdi:counter
+              - entity: sensor.24_hour_solid_diaper_average
+                name: Solid Diapers
+              - entity: sensor.24_hour_wet_diaper_average
+                name: Wet Diapers
+                icon: mdi:water-outline
+              - entity: sensor.24_hour_feeding_average
+                name: Feeding Average
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: toggle
+        entity: input_button.nodered_reset
+  - theme: Backend-selected
+    title: Baby Buddy Feeding
+    path: baby-buddy-feeding
+    icon: mdi:mother-nurse
+    subview: true
+    type: panel
+    badges: []
+    cards:
+      - title: Record a Feeding
+        type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: input_select.bb_feeding_method
+              - entity: input_select.bb_feeding_type
+              - entity: input_number.bb_amount
+                name: Amount (mL)
+              - entity: input_text.bb_notes
+                name: Notes
+            footer:
+              type: buttons
+              entities:
+                - entity: input_button.bb_feeding
+                  name: Open Baby Buddy
+                  tap_action:
+                    action: url
+                    url_path: http://<YOUR-URL>:<PORT>/feedings/
+                - entity: input_button.bb_feeding
+                  name: Log Feeding
+                  tap_action:
+                    action: call-service
+                    service: input_button.press
+                    target:
+                      entity_id: input_button.bb_feeding
+                    confirmation:
+                      text: Submit Feeding Data?
+                    service_data: {}
+          - type: entities
+            title: Feeding Stats
+            entities:
+              - entity: sensor.total_daily_feeding_amount
+                type: custom:multiple-entity-row
+                name: Bottles
+                show_state: false
+                icon: mdi:baby-bottle
+                entities:
+                  - name: Day
+                    entity: sensor.bottle_counts_day
+                  - name: Night
+                    entity: sensor.bottle_counts_night
+                  - name: Average
+                    attribute: average_per_bottle
+                    unit: mL
+                  - name: Total
+                    attribute: daily_bottles
+              - entity: sensor.baby_doe_last_feeding
+                name: Last Amount
+              - entity: sensor.total_daily_feeding_amount
+                name: Total Amount Eaten Today
+              - type: attribute
+                entity: sensor.baby_doe_last_feeding
+                attribute: start
+                name: Last Feeding
+                icon: mdi:clock
+  - theme: Backend-selected
+    subview: true
+    title: Baby Buddy Diaper
+    path: baby-buddy-diaper
+    icon: mdi:human-baby-changing-table
+    type: panel
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: Record A Diaper Change
+            entities:
+              - entity: input_select.bb_diaper_type
+              - entity: input_select.bb_diaper_color
+              - entity: input_text.bb_notes
+                name: Notes
+            footer:
+              type: buttons
+              entities:
+                - entity: input_button.bb_diaper
+                  name: Open Baby Buddy
+                  tap_action:
+                    action: url
+                    url_path: http://<YOUR-URL>:<PORT>/changes/
+                - entity: input_button.bb_diaper
+                  name: Log a Diaper Change
+                  tap_action:
+                    action: call-service
+                    service: input_button.press
+                    target:
+                      entity_id: input_button.bb_diaper
+                    confirmation:
+                      text: Submit Diaper Data?
+                    service_data: {}
+          - type: entities
+            title: Diaper Stats
+            show_header_toggle: false
+            entities:
+              - entity: sensor.total_daily_changes
+                type: custom:multiple-entity-row
+                name: Diaper Changes
+                state_header: Total Changes
+                show_state: true
+                entities:
+                  - name: Wet
+                    entity: sensor.daily_wet_diapers
+                  - name: Solid
+                    entity: sensor.daily_solid_diapers
+              - entity: sensor.baby_doe_last_change
+                name: Last Diaper Change
+          - type: custom:apexcharts-card
+            chart_type: donut
+            apex_config:
+              fill:
+                type: gradient
+                gradient:
+                  shade: dark
+                  shadeIntensity: 0.1
+                  opacityFrom: 0.9
+                  opacityTo: 0.85
+                  stops:
+                    - 0
+                    - 90
+                    - 100
+              chart:
+                fontFamily: SF Text
+              legend:
+                position: right
+                fontSize: 16px
+                fontWeight: 300
+                markers:
+                  width: 16
+                  height: 25
+                  customHTML:
+                    - |-
+                      EVAL:() => {
+                        return `<ha-icon icon="hass:emoticon-poop" style="--mdc-icon-size: 16px;"></ha-icon>`
+                      }
+                    - |-
+                      EVAL:() => {
+                        return `<ha-icon icon="hass:emoticon-poop" style="--mdc-icon-size: 16px;"></ha-icon>`
+                      }
+                  fillColors:
+                    - none
+                    - none
+              stroke:
+                show: true
+                width: 0.4
+              dataLabels:
+                enabled: true
+                style:
+                  fontSize: 14px
+                  fontWeight: 700
+                dropShadow:
+                  enabled: true
+                  top: 0
+                  left: 0
+                  blur: 3
+                  color: black
+                  opacity: 0.1
+              plotOptions:
+                pie:
+                  startAngle: 0
+                  endAngle: 360
+                  expandOnClick: true
+                  offsetX: 0
+                  offsetY: 0
+                  customScale: 1
+                  dataLabels:
+                    offset: 0
+                    minAngleToShowLabel: 10
+                  donut:
+                    size: 63%
+                    background: transparent
+                    labels:
+                      show: true
+                      value:
+                        fontSize: 42px
+                        fontWeight: 700
+                        offsetY: 16
+                      name:
+                        show: true
+            series:
+              - entity: sensor.daily_solid_diapers
+                name: Solid Diapers
+              - entity: sensor.daily_wet_diapers
+                name: Wet Diapers
+  - theme: Backend-selected
+    subview: true
+    title: Pumping
+    path: baby-buddy-pumping
+    icon: mdi:pumpkin
+    type: panel
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: Record A Pumping
+            state_color: false
+            show_header_toggle: false
+            entities:
+              - entity: input_number.bb_amount
+                name: Amount Pumped (mL)
+              - entity: input_text.bb_notes
+                name: Notes
+            footer:
+              type: buttons
+              entities:
+                - entity: input_button.bb_pumping
+                  name: Open Baby Buddy
+                  tap_action:
+                    action: url
+                    url_path: http://<YOUR-URL>:<PORT>/pumping/
+                - entity: input_button.bb_pumping
+                  name: Log Pumping
+                  tap_action:
+                    action: call-service
+                    service: input_button.press
+                    target:
+                      entity_id: input_button.bb_pumping
+                    confirmation:
+                      text: Submit Pumping Data?
+                    service_data: {}
+          - type: entities
+            entities:
+              - type: attribute
+                entity: sensor.total_daily_pumping_amount
+                attribute: times_pumped
+                name: Times Pumped Today
+                icon: mdi:counter
+              - entity: sensor.baby_doe_last_pumping
+                name: Last Volume Pumped (mL)
+                suffix: mL
+                icon: mdi:beaker-outline
+              - entity: sensor.total_daily_pumping_amount
+                name: Total Amount Pumped Today
+                icon: mdi:beaker
+              - type: attribute
+                entity: sensor.total_daily_pumping_amount
+                attribute: average_per_pump
+                name: Average mL Per Pump
+                suffix: mL
+              - type: attribute
+                entity: sensor.baby_doe_last_pumping
+                attribute: time
+                name: Last Pumping
+                icon: mdi:clock
+          - type: history-graph
+            entities:
+              - entity: sensor.total_daily_pumping_amount
+            hours_to_show: 24
+  - theme: Backend-selected
+    title: Baby Buddy Sleep
+    path: baby-buddy-sleep
+    subview: true
+    icon: mdi:baby-carriage
+    type: panel
+    badges: []
+    cards:
+      - title: Sleep
+        state_color: false
+        show_header_toggle: false
+        type: entities
+        entities:
+          - entity: input_text.bb_notes
+        footer:
+          type: buttons
+          entities:
+            - entity: input_button.bb_sleep
+              name: Open Baby Buddy
+              tap_action:
+                action: url
+                url_path: http://<YOUR-URL>:<PORT>/sleep/
+            - entity: input_button.bb_tummy_time
+              name: Log Sleep
+              tap_action:
+                action: call-service
+                service: input_button.press
+                target:
+                  entity_id: input_button.bb_sleep
+                confirmation:
+                  text: Submit Sleep?
+                service_data: {}
+  - theme: Backend-selected
+    title: Baby Buddy Tummy Time
+    path: baby-buddy-tummy-time
+    subview: true
+    icon: mdi:seesaw
+    type: panel
+    badges: []
+    cards:
+      - title: Tummy Time
+        state_color: false
+        show_header_toggle: false
+        type: entities
+        entities:
+          - entity: input_text.bb_milestone
+        footer:
+          type: buttons
+          entities:
+            - entity: input_button.bb_tummy_time
+              name: Open Baby Buddy
+              tap_action:
+                action: url
+                url_path: http://<YOUR-URL>:<PORT>/tummy-time/
+            - entity: input_button.bb_tummy_time
+              name: Log Tummy Time
+              tap_action:
+                action: call-service
+                service: input_button.press
+                target:
+                  entity_id: input_button.bb_tummy_time
+                confirmation:
+                  text: Submit Tummy Time?
+                service_data: {}
