@@ -76,6 +76,8 @@ One of the things I set out to do with this project was to get more information 
 
 Since these projects are intended for the sleep-deprived parents of newborns, mistakes are almost guaranteed. Failure to input all required information meant no data would POST to the add-on, resulting in missed entries. The Node-RED flows now check for what data is present vs what is required to prevent API errors. When required data is found to be missing, the API call is bypassed, the current time is stored as an `endTime` variable, and a mobile notification is sent to complete it at our earliest convenience. Using the `endTime` var allows us to finish whatever we are doing without worrying about times getting messed up. We also get confirmation notifications after the integration POSTs the information successfully. I added a persistent notification that can quickly tell us when our child ate last and how much, without having to open up the dashboard.
 
+I’ve also incorporated Google Assistant via the use of Routines. I exposed certain input.buttons to Google Home, then used those in Node-RED to trigger certain flows.
+
 #### Code: [Node-RED.json](Node-Red.json)
 
 <h2>Known issues:</h2>
