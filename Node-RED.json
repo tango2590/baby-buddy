@@ -7588,7 +7588,7 @@
         "z": "b063717f88e1c168",
         "g": "9f3b7f9c759a73e8",
         "name": "Feeding Persistent",
-        "func": "var time = msg.time;\nvar humanized = msg.humanized;\nvar duration = msg.duration;\nvar amount = msg.amount;\n\nmsg.payload = {\n    data: {\n        \"title\": \"Last Feeding: \" + time,\n        \"message\": humanized + \" - Amount: \" + amount + \"mL\",\n        \"data\": {\n            \"tag\": \"feeding_persistent\",\n            \"color\": \"#253DA1\",\n            \"notification_icon\": \"mdi:baby-bottle\",\n            \"clickAction\": \"/mobile-h/baby-buddy\",\n            \"persistent\": true,\n            \"sticky\": true\n        }\n    }\n}\n\nreturn msg;",
+        "func": "var time = msg.time;\nvar duration = msg.duration;\nvar amount = msg.amount;\n\nmsg.payload = {\n    data: {\n        \"title\": \"Last Feeding: \" + time,\n        \"message\": \"Amount: \" + amount + \"mL\",\n        \"data\": {\n            \"tag\": \"feeding_persistent\",\n            \"color\": \"#253DA1\",\n            \"notification_icon\": \"mdi:baby-bottle\",\n            \"clickAction\": \"/mobile-h/baby-buddy\",\n            \"persistent\": true,\n            \"sticky\": true\n        }\n    }\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
