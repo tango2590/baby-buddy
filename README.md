@@ -33,7 +33,7 @@ The automation side of things was initially inspired by both Noblewolf’s bluep
 - [Input Number](https://www.home-assistant.io/integrations/input_number/)
   - BB Amount
 - [Template Sensors](https://www.home-assistant.io/integrations/template/)
-  - Template sensors needed for the frontend. See /templates.yaml.
+  - Template sensors needed for the frontend. See [templates.yaml](templates.yaml).
 
 <h3>Additional Sensors (with attributes) created by the Node-RED API calls</h3>
 
@@ -66,6 +66,8 @@ Our newborn was a late preterm, so the additional information was useful to us. 
 <h3>Lovelace</h3>
 My frontend changes include formatting changes, inclusion of graphs for each section, and the addition of the above data. Markdown headers now separate sections of data making it easier to read. The biggest change was modifying the `Start Timer` button, which now animates when the timer is active, and it also displays an elapsed time to gauge duration of the activity. The End Feeding/Sleep/TummyTime buttons are now hidden behind a conditional card that only shows when the timer is active. I retained the subviews for each activity, but I duplicated relevant information into their respective subviews as well. The only downside of the subviews is they don't navigate back to the previous lovelace page since only one action is allowed, which is needed for the helper.
 
+#### Code: [lovelace.yaml](lovelace.yaml)
+
 <h3>Node-RED Automations</h3>
 
 I’m a very visual person, so I use Node-RED for 98% of my automations. The automations used in this project use a variety of inputs, including input helpers and Noblewolf's blueprint.
@@ -74,6 +76,7 @@ One of the things I set out to do with this project was to get more information 
 
 Since these projects are intended for the sleep-deprived parents of newborns, mistakes are almost guaranteed. Failure to input all required information meant no data would POST to the add-on, resulting in missed entries. The Node-RED flows now check for what data is present vs what is required to prevent API errors. When required data is found to be missing, the API call is bypassed, the current time is stored as an `endTime` variable, and a mobile notification is sent to complete it at our earliest convenience. Using the `endTime` var allows us to finish whatever we are doing without worrying about times getting messed up. We also get confirmation notifications after the integration POSTs the information successfully. I added a persistent notification that can quickly tell us when our child ate last and how much, without having to open up the dashboard.
 
+#### Code: [Node-RED.json](Node-Red.json)
 
 <h2>Known issues:</h2>
 
