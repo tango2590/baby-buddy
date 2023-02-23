@@ -76,4 +76,4 @@ Since these projects are intended for the sleep-deprived parents of newborns, mi
 <h2>Known issues:</h2>
 
 - API calls on the first day of the month that reference the previous day *(ex. overnight bottle counts)* do not work properly based on how the function node builds the `url` variable.
-- If the previous feeding/pumping amount is the same as the new amount, the `State` for the BabyBuddy HA Integration's `last_feeding` and `last_pumping` sensors don't update, only the attriubtes update. The fix is to use the template sensors. The template sensors extract a variety of these attributes which can then be used as triggers in Node-RED.
+- If the previous feeding/pumping amount is the same as the new amount, the `State` for the BabyBuddy HA Integration's `last_feeding` and `last_pumping` sensors don't update, only the attributes update. The fix is to use the template sensors. The template sensors extract a variety of these attributes which can then be used as triggers in Node-RED.
