@@ -32,6 +32,8 @@ The automation side of things was initially inspired by both Noblewolf’s bluep
   - BB Notes
 - [Input Number](https://www.home-assistant.io/integrations/input_number/)
   - BB Amount
+- [Template Sensors](https://www.home-assistant.io/integrations/template/)
+  - Template sensors needed for the frontend. See /templates.yaml.
 
 <h3>Additional Sensors (with attributes) created by the Node-RED API calls</h3>
 
