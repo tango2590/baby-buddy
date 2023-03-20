@@ -14,6 +14,7 @@ The automation side of things was initially inspired by both Noblewolf’s bluep
 - [Stopwatch automation](https://community.home-assistant.io/t/stopwatch-with-start-stop-resume-lap-and-reset/443994)
 - [custom:button-card](https://github.com/custom-cards/button-card)
 - [custom:apexcharts-card](https://github.com/RomRider/apexcharts-card)
+- [custom:plotly-graph-card](https://github.com/dbuezas/lovelace-plotly-graph-card)
 - [custom:multiple-entity-row](https://github.com/benct/lovelace-multiple-entity-row)
 - Installation of Noblewolf’s blueprint *(found above)*
 - Addition of a modified list of input helpers *(found below)*
