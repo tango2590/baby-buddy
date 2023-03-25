@@ -11,6 +11,7 @@ The automation side of things was initially inspired by both Noblewolf’s bluep
 - [BabyBuddy HomeAssistant Add-on](https://github.com/OttPeterR/addon-babybuddy)
 - [BabyBuddy Integration](https://github.com/jcgoette/baby_buddy_homeassistant)
 - [Node-RED Add-on](https://github.com/hassio-addons/addon-node-red)
+- [Node-RED Companion Integration](https://github.com/zachowj/hass-node-red)
 - [Stopwatch automation](https://community.home-assistant.io/t/stopwatch-with-start-stop-resume-lap-and-reset/443994)
 - [custom:button-card](https://github.com/custom-cards/button-card)
 - [custom:apexcharts-card](https://github.com/RomRider/apexcharts-card)
