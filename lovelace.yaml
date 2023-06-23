@@ -136,9 +136,10 @@ views:
             name: Diaper
             icon: mdi:human-baby-changing-table
             show_entity_picture: false
-            entity: sensor.baby_doe_last_change
+            entity: sensor.baby_tengowski_last_change
+            vertical: true
           - type: tile
-            entity: sensor.baby_doe_last_pumping
+            entity: sensor.baby_tengowski_last_pumping
             name: Pumping
             tap_action:
               action: navigate
@@ -146,6 +147,19 @@ views:
             icon_tap_action:
               action: navigate
               navigation_path: /mobile-h/baby-buddy-pumping
+            vertical: true
+          - type: tile
+            tap_action:
+              action: navigate
+              navigation_path: /mobile-h/baby-buddy-feeding-past
+            icon_tap_action:
+              action: navigate
+              navigation_path: /mobile-h/baby-buddy-feeding-past
+            name: Feeding
+            icon: mdi:baby-bottle
+            show_entity_picture: false
+            entity: sensor.total_daily_feeding_amount
+            vertical: true
       - type: vertical-stack
         cards:
           - type: markdown
