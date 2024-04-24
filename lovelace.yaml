@@ -136,10 +136,10 @@ views:
             name: Diaper
             icon: mdi:human-baby-changing-table
             show_entity_picture: false
-            entity: sensor.baby_tengowski_last_change
+            entity: sensor.baby_doe_last_change
             vertical: true
           - type: tile
-            entity: sensor.baby_tengowski_last_pumping
+            entity: sensor.baby_doe_last_pumping
             name: Pumping
             tap_action:
               action: navigate
