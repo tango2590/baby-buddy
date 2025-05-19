@@ -1,0 +1,175 @@
+# The following helpers should be added to their respective files or
+# sections of your config.
+
+######################
+### INPUT BOOLEANS ###
+######################
+input_boolean:
+
+### Vitamin C ###
+  probiotic_vitamin_d:
+    name: Probiotic/Vitamin D
+
+### Stopwatch ###
+  start_stopwatch:
+    # It triggers stopwatch to start/stop(pause)
+    name: Start/Stop Stopwatch
+#    initial: off
+  reset_stopwatch:
+    # It triggers stopwatch to reset
+    name: Reset
+#    initial: off
+  tictac_stopwatch:
+    # Pendulum of the stopwatch
+    name: TicTac
+#    initial: off
+  lap_stopwatch:
+    # It triggers stopwatch to show lap time
+    name: Lap
+    icon: mdi:camera-outline
+#    initial: off
+
+
+#####################
+### INPUT BUTTONS ###
+#####################
+input_button:
+
+  bb_refresh:
+    name: BB Refresh Data
+  bb_diaper:
+    name: BB Diaper Helper
+  bb_feeding:
+    name: BB Feeding Helper
+  bb_feeding_past:
+    name: BB Past Feeding Helper
+  bb_pumping:
+    name: BB Pumping Helper
+  bb_sleep:
+    name: BB Sleep Helper
+  bb_tummy_time:
+    name: BB Tummy Time Helper
+  bb_measurement_weight:
+    name: BB Weight
+  bb_measurement_height:
+    name: BB Height
+  bb_measurement_temperature:
+    name: BB Temperature
+
+### Google Home ###
+# These optional  buttons trigger scenes in Google Home, allowing you to use your voice to
+# record data. Manual creation of each scene and voice command is required. I recommend you
+# keep these active between kids to prevent having to re-setup the routines in GH.
+  bb_gh_diaper_wet:
+    name: BB GH Diaper Wet
+  bb_gh_diaper_wet_and_solid_green:
+    name: BB GH Diaper Wet & Solid Green
+  bb_gh_diaper_wet_and_solid_black:
+    name: BB GH Diaper Wet & Solid Black
+  bb_gh_diaper_wet_and_solid_brown:
+    name: BB GH Diaper Wet & Solid Brown
+  bb_gh_diaper_wet_and_solid_yellow:
+    name: BB GH Diaper Wet & Solid Yellow
+  bb_gh_diaper_solid_green:
+    name: BB GH Diaper Solid Green
+  bb_gh_diaper_solid_black:
+    name: BB GH Diaper Solid Black
+  bb_gh_diaper_solid_brown:
+    name: BB GH Diaper Solid Brown
+  bb_gh_diaper_solid_yellow:
+    name: BB GH Diaper Solid Yellow
+  bb_gh_feeding:
+    name: BB GH Feeding Helper
+  bb_gh_pumping:
+    name: BB GH Pumping Helper
+  bb_gh_sleep:
+    name: BB GH Sleep Helper
+  bb_gh_tummy_time:
+    name: BB GH Tummy Time Helper
+
+
+####################
+### INPUT NUMBER ###
+####################
+input_number:
+
+  bb_amount:
+    name: BB Amount
+    min: 0
+    max: 500
+    step: 1
+    unit_of_measurement: mL
+    mode: box
+
+  bb_prev_tummy_time:
+    name: BB Previous Tummy Time
+    min: 0
+    max: 120
+    step: 1
+    unit_of_measurement: min
+
+
+####################
+### INPUT SELECT ###
+####################
+input_select:
+
+  bb_diaper_type:
+    name: Diaper Type
+    options:
+      - ''
+      - Wet
+      - Solid
+      - Wet and Solid
+    initial: ''
+  bb_diaper_color:
+    name: Diaper Color
+    options:
+      - ''
+      - Brown
+      - Black
+      - Green
+      - Yellow
+    initial: ''
+  bb_feeding_method:
+    name: Feeding Method
+    options:
+  #      - ''
+      - Bottle
+      - Left breast
+      - Right breast
+      - Both breasts
+      - Parent fed
+    initial: Bottle
+  bb_feeding_type:
+    name: Feeding Type
+    options:
+  #      - ''
+      - Breast milk
+      - Fortified breast milk
+      - Formula
+      - Solid food
+    initial: Breast milk
+
+
+##################
+### INPUT TEXT ###
+##################
+  bb_notes:
+    name: BB Notes
+    initial: ''
+  bb_milestone:
+    name: BB Milestone
+  bb_weight:
+    name: BB Weight
+  bb_height:
+    name: BB Height
+  bb_temperature:
+    name: BB Temperature
+
+###############
+### COUNTER ###
+###############
+counter:
+  bb_tummy_time:
+    name: Daily Total Tummy Time
